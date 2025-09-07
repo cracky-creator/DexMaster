@@ -3,6 +3,7 @@ import { Card } from "@/components/Card"
 import { ThemedText } from "@/components/ThemedText"
 import { useThemeColors } from "@/hooks/useThemeColors"
 import { Link } from "expo-router"
+import { useEffect, useState } from "react"
 
 type Props = {
     style?: ViewStyle,
@@ -11,6 +12,8 @@ type Props = {
 }
 export function PokemonCard ({style, id, name}: Props) {
     const colors = useThemeColors()
+    
+
     return <Link href={{pathname: "/pokemon/[id]", params: {id: id}}} asChild>
         <Pressable android_ripple={{color: colors.tint, foreground: true}} style={style}>
             <Card style={[style, styles.card]}>

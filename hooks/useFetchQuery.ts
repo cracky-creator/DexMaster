@@ -48,3 +48,5 @@ export function useInfiniteFetchQuery<T extends keyof API>(path: T){
 function wait (duration: number) {
     return new Promise(resolve => setTimeout(resolve, duration * 1000))
 }
+
+

@@ -5,6 +5,7 @@ import { SearchBar } from "@/components/SearchBar";
 import { ThemedText } from "@/components/ThemedText";
 import { getPokemonId } from "@/functions/pokemon";
 import { usefetchQuery, useInfiniteFetchQuery } from "@/hooks/useFetchQuery";
+import { usePokemonNames } from "@/hooks/usePokemonNames";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { Link } from "expo-router";
 import { useState } from "react";
@@ -16,7 +17,8 @@ export default function Index() {
   const {data, isFetching, fetchNextPage} = useInfiniteFetchQuery('/pokemon?limit=21');
   const [search, setSearch] = useState('');
   const pokemons = data?.pages.flatMap(page => page.results) ?? [];
-  const filteredPokemons = search ? pokemons.filter(p => p.name.includes(search.toLowerCase()) || getPokemonId(p.url).toString() == search) : pokemons
+  const pokemonsFR = usePokemonNames(pokemons);
+  const filteredPokemons = search ? pokemonsFR.filter(p => p.nameFR.toLowerCase().includes(search.toLowerCase()) || p.id.toString() === search) : pokemonsFR;
 
   return (
     <SafeAreaView style={[styles.container, {backgroundColor: colors.tint}]}>
@@ -36,8 +38,8 @@ export default function Index() {
           ListFooterComponent={
             isFetching ? <ActivityIndicator color={colors.tint}/> : null
           }
-          onEndReached={search ? undefined : () => fetchNextPage()}
-          renderItem={({item}) => <PokemonCard id={getPokemonId(item.url)} name={item.name} style={{flex: 1/3,}}/>} keyExtractor={(item) => item.url} />
+          onEndReached={() => fetchNextPage()}
+          renderItem={({item}) => <PokemonCard id={item.id} name={item.nameFR} style={{flex: 1/3,}}/>} keyExtractor={(item) => item.id.toString()} />
       </Card>
     </SafeAreaView>
   );
